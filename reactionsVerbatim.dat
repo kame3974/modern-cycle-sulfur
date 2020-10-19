@@ -1,7 +1,10 @@
 COS + OH -> CO2 + SH
 COS + O -> CO + SO
-CS2 + OH -> SH + COS
 CS2 + O -> CS + SO
+CS2 + O -> COS + S
+CS2 + O -> CO + S2
+CS2 + OH -> SCSOH
+SCSOH + O2 -> COS + HSO2
 CS + O2 -> COS + O
 CS + O3 -> COS + O2
 CS + O -> CO + S
@@ -35,18 +38,26 @@ SO2 -> SO4
 CH3SCH3 + O -> SO2
 CH3SCH3 + OH -> SO2
 CH3SCH3 + OH -> SO2 + CH4O3S
+CS2E + O2 -> CS2
+CS2E + N2 -> CS2
+CS2E + O2 -> CS + SO2
+S2 + O -> S + SO
 COS -> CO + S
 O3 -> O2 + O
 O2 -> O + O
 CS2 -> CS + S
-SO3 -> SO2 + O
+CS2 -> CS2E
 SO2 -> SO + O
+SO3 -> SO2 + O
 H2S -> SH + H
 SO -> S + O
 CO2 + SH -> COS + OH
 CO + SO -> COS + O
-SH + COS -> CS2 + OH
 CS + SO -> CS2 + O
+COS + S -> CS2 + O
+CO + S2 -> CS2 + O
+SCSOH -> CS2 + OH
+COS + HSO2 -> SCSOH + O2
 COS + O -> CS + O2
 COS + O2 -> CS + O3
 CO + S -> CS + O
@@ -80,3 +91,7 @@ SO4 -> SO2
 SO2 -> CH3SCH3 + O
 SO2 -> CH3SCH3 + OH
 SO2 + CH4O3S -> CH3SCH3 + OH
+CS2 -> CS2E + O2
+CS2 -> CS2E + N2
+CS + SO2 -> CS2E + O2
+S + SO -> S2 + O
