@@ -98,7 +98,7 @@ contains
        sumxn(:) = 0d0
        !loop on reactions
        do i=1,photoReactionsNumber
-          sumxn(:) = sumxn(:) + xsecAll(:,i) * nall(j,photoPartnerIndex(i))
+          sumxn(:) = sumxn(:) + xsecAll(:,i) * nall(j,photoPartnerIndex(i)) 
        end do
        tauAll(:,j) = tauAll(:,j+1) + gridSpace(j) * sumxn(:)
     end do
@@ -852,5 +852,89 @@ end function
     patmo_getTgas = TgasAll(icell)
 
   end function patmo_getTgas
+
+  !**************
+!dump J-Values
+  subroutine patmo_dumpJValue(fname)
+    use patmo_commons
+    use patmo_constants
+    use patmo_parameters
+    implicit none
+    character(len=*),intent(in)::fname
+    integer::i
+
+    open(22,file=trim(fname),status="replace")
+    write(22,*)"altitude/km, CS2+OH->SCSOH, SCSOH+O2->COS+HSO2, O+CS2->CS+SO, O+CS2->COS+S, O+CS2->CO+S2, CS2->CS+S, CS2->CS2E, CS2E+O2->CS+SO2, CS+SO->CS2+O, COS+S->CS2+O, CO+S2->CS2+O, SCSOH->CS2+OH, COS+HSO2->SCSOH"
+    !loop on cells
+    do i=1,cellsNumber
+        write(22,*) i, krate(i,6), krate(i,7), krate(i,3), krate(i,4), krate(i,5), krate(i,48), krate(i,49),krate(i,43), krate(i,56), krate(i,57), krate(i,58), krate(i,59), krate(i,60)
+    end do
+    write(22,*)
+    close(22)
+
+  end subroutine patmo_dumpJValue
+
+  !**************
+  !dump all reaction rates
+  subroutine patmo_dumpAllRates(fname)
+    use patmo_commons
+    use patmo_constants
+    use patmo_parameters
+    implicit none
+    character(len=*),intent(in)::fname
+    integer::i
+
+    open(22,file=trim(fname),status="replace")
+    write(22,*) "altitude/km, CS2+OH->SCSOH, SCSOH+O2->COS+HSO2, O+CS2->CS+SO, O+CS2->COS+S, O+CS2->CO+S2, CS2->CS+S, CS2->CS, CS2E+O2->CS+SO2, CS+SO->CS2+O, COS+S->CS2+O, CO+S2->CS2+O, SCSOH->CS2+OH, COS+HSO2->SCSOH"
+    !loop on cells
+    do i=1,cellsNumber
+        write(22,*) i, &
+        krate(i,6)*nall(i,patmo_idx_CS2)*nall(i,patmo_idx_OH), &
+        krate(i,7)*nall(i,patmo_idx_SCSOH)*nall(i,patmo_idx_O2), &
+        krate(i,3)*nall(i,patmo_idx_CS2)*nall(i,patmo_idx_O), &
+        krate(i,4)*nall(i,patmo_idx_CS2)*nall(i,patmo_idx_O), &
+        krate(i,5)*nall(i,patmo_idx_CS2)*nall(i,patmo_idx_O), &
+        krate(i,48)*nall(i,patmo_idx_CS2), &
+        krate(i,49)*nall(i,patmo_idx_CS2), &
+        krate(i,43)*nall(i,patmo_idx_CS2E)*nall(i,patmo_idx_O2), &
+        krate(i,56)*nall(i,patmo_idx_CS)*nall(i,patmo_idx_SO), &
+        krate(i,57)*nall(i,patmo_idx_COS)*nall(i,patmo_idx_S), &
+        krate(i,58)*nall(i,patmo_idx_CO)*nall(i,patmo_idx_S2), &
+        krate(i,59)*nall(i,patmo_idx_SCSOH), &
+        krate(i,60)*nall(i,patmo_idx_COS)*nall(i,patmo_idx_HSO2)
+
+ 
+    end do
+    write(22,*)
+    close(22)
+
+end subroutine patmo_dumpAllRates
+
+subroutine patmo_dumpAllNumberDensityDifference(ifile,nb,na)
+  use patmo_commons
+  use patmo_parameters
+  implicit none
+  integer,intent(in)::ifile
+  real*8,intent(in)::nb(neqAll), na(cellsNumber, speciesNumber)
+  real*8::deltaNAll(cellsNumber, speciesNumber)
+  integer::i,j
+
+  !compute deference
+  do i = 1, speciesNumber
+      deltaNAll(:, i) = nb((i - 1) * cellsNumber + 1 : (i * cellsNumber)) - na(:, i)
+  end do
+
+  ! do j = 1, cellsNumber
+  !     do i = 1, speciesNumber
+  !         write(ifile, *) j, i, deltaNAll(j, i)
+  !     end do
+  ! end do
+  do i = 1, speciesNumber
+      write (ifile, *) i, deltaNAll(:, i)
+  end do
+  write(ifile,*)
+
+end subroutine patmo_dumpAllNumberDensityDifference
+
 
 end module patmo
